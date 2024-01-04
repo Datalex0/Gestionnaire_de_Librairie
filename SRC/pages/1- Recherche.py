@@ -20,11 +20,10 @@ centered_text("Rechercher un Ouvrage")
 
 url = "https://raw.githubusercontent.com/Datalex0/Gestionnaire_de_Librairie/main/SRC/books.json"
 response = requests.get(url)
-data = response.json()
+Books = response.json()
 # import DB
 #client = MongoClient("books.json")
 #db = client.MongoDB
-Books = data.Books
 
 
 # Double Curseur année

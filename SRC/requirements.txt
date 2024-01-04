@@ -1,0 +1,6 @@
+art==6.1
+matplotlib==3.8.2
+pandas==2.1.4
+pymongo==4.6.1
+seaborn==0.13.1
+streamlit==1.29.0

@@ -74,18 +74,18 @@ if choix == 'Les Ouvrages':
         df_types = pd.DataFrame({'Type': dict_compte_ouvrages.keys(), 'Count': dict_compte_ouvrages.values()})
         df_types.replace({"Book":"Livre","Phd":"Thèse"}, inplace=True)
         # Tri du DF dans l'ordre décroissant
-        df_types_trié = df_types.sort_values(by='Count', ascending=False)
+        df_types_trie = df_types.sort_values(by='Count', ascending=False)
         # Barplot
         fig, ax = plt.subplots(figsize=(8, 6))
         ax.patch.set_facecolor('black')
         #plt.figure(figsize=(3, 3))
-        sns.barplot(data=df_types_trié, x='Type', y='Count', hue='Type', palette='viridis', ax=ax)
+        sns.barplot(data=df_types_trie, x='Type', y='Count', hue='Type', palette='viridis', ax=ax)
         # Ajouter des étiquettes et un titre
         plt.xlabel('Type', color='white')
         plt.ylabel('Count', color='white')
         plt.title('Répartition par type', color='white')
         # Annoter chaque barre avec sa valeur en blanc
-        for i, v in enumerate(df_types_trié['Count']):
+        for i, v in enumerate(df_types_trie['Count']):
             ax.text(i, v + 0.1, str(v), ha='center', va='bottom', fontsize=10, color='white')
         fig.set_facecolor('black')
         # Changer la couleur des étiquettes de l'axe des ordonnées (valeurs)

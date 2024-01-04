@@ -2,8 +2,6 @@
 from pymongo import MongoClient
 import pandas as pd
 import streamlit as st
-import requests
-import json
 
 #Configuration des dimensions & affichage de la page
 st.set_page_config(page_title="Recherche d'Ouvrages",
@@ -18,12 +16,11 @@ def centered_text(text):
     st.write("\n")
 centered_text("Rechercher un Ouvrage")
 
-url = "https://raw.githubusercontent.com/Datalex0/Gestionnaire_de_Librairie/main/SRC/books.json"
-response = requests.get(url)
-Books = response.json()
+
 # import DB
-#client = MongoClient("books.json")
-#db = client.MongoDB
+client = MongoClient("https://raw.githubusercontent.com/Datalex0/Gestionnaire_de_Librairie/main/SRC/books.json")
+db = client.MongoDB
+Books = db.Books
 
 
 # Double Curseur année

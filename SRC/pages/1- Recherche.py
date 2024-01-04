@@ -24,8 +24,7 @@ data = response.json()
 # import DB
 #client = MongoClient("books.json")
 #db = client.MongoDB
-db = data.MongoDB
-Books = db.Books
+Books = data.Books
 
 
 # Double Curseur année

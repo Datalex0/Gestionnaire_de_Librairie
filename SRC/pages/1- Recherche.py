@@ -18,7 +18,7 @@ centered_text("Rechercher un Ouvrage")
 
 
 # import DB
-client = MongoClient("https://raw.githubusercontent.com/Datalex0/Gestionnaire_de_Librairie/main/SRC/books.json")
+client = MongoClient("mongodb+srv://datalexis0:Data001@librairie.m2vowes.mongodb.net/")
 db = client.MongoDB
 Books = db.Books
 
@@ -76,18 +76,22 @@ def dataframe(json):
     
     return afficher
 
-
+# Fonction de Traduction
+def traduction():
+    if type == "Livre":
+        type = "Book"
+    elif type == "Thèse":
+        type = "Phd"
 
 # Fonction de recherche
 def cherche(mode, colonne):
     json = []
     for item in Books.find({mode : {"$regex":colonne, "$options": "i"}}).sort('year'):
-        if item == "Livre":
-            item = "Book"
-        elif item == "Thèse":
-            item = "Phd"
+        traduction()
         json.append(item)
     return json
+
+
 
 
 # Choix du Mode de Recherche
@@ -151,10 +155,7 @@ elif recherche == "Par Type":
     if type == 'Tous':
         json = list(Books.find())
     else :
-        if type == "Livre":
-            type = "Book"
-        elif type == "Thèse":
-            type = "Phd"
+        traduction()
         json = cherche("type", type)
 
 

@@ -133,9 +133,6 @@ if choix == 'Les Ouvrages':
     
     
 elif choix == 'Les Auteurs':
-    # choix_auteurs = st.sidebar.radio(
-    # "Quelle stat voulez-vous ?",
-    # ("Le nombre total d'Auteurs", "Le Nombre d'Auteurs par Type"))
     
     set_auteurs = set()
     for item in Books.find({"authors" : {"$regex":"", "$options": "i"}}).sort('authors') :
@@ -144,40 +141,79 @@ elif choix == 'Les Auteurs':
             set_auteurs.add(item['authors'][i])
     compte_auteurs = len(set_auteurs)
     centered_text(f"Nombre total d'Auteurs : {compte_auteurs}", "h2")
+        
+    # Diviser l'espace d'affichage en 2 colonnes
+    col1, col2 = st.columns(2)
     
+    
+    # Afficher GRAPH top10 auteurs dans la première colonne
+    with col1:
+        
+        compte_auteurs = Books.aggregate([
+            {'$unwind': "$authors"},
+            {
+            '$group': {
+                '_id': "$authors",
+                'nb': {'$sum': 1},
+                }
+            },
+            {'$sort': {'nb': -1}},
+            {'$limit': 10}
+        ])
+        dict_compte_auteurs = {}
+        for item in compte_auteurs:
+            dict_compte_auteurs[item['_id']] = item['nb']
+        df_compte_auteurs = pd.DataFrame({'Auteurs': dict_compte_auteurs.keys(), "Nombre d'Ouvrages": dict_compte_auteurs.values()})
+        # Barplot
+        fig, ax = plt.subplots(figsize=(4, 3))
+        ax.patch.set_facecolor('black')
+        #plt.figure(figsize=(3, 3))
+        sns.barplot(data=df_compte_auteurs, x="Nombre d'Ouvrages", y="Auteurs", hue='Auteurs', palette='viridis', ax=ax)
+        # Ajouter des étiquettes et un titre
+        plt.xlabel("Nombre d'Ouvrages", color='white')
+        plt.ylabel("Auteurs", color='white')
+        plt.title('Top 10 des Auteurs les plus prolifiques', color='white')
+        # Annoter chaque barre avec sa valeur en blanc
+        for i, v in enumerate(df_compte_auteurs["Nombre d'Ouvrages"]):
+            ax.text(v + 0.1, i, str(v), ha='left', va='center', fontsize=10, color='white')
 
-    compte_auteurs = Books.aggregate([
-        {'$unwind': "$authors"},
-        {
-        '$group': {
-            '_id': "$authors",
-            'nb': {'$sum': 1},
-            }
-        },
-        {'$sort': {'nb': -1}},
-        {'$limit': 10}
-    ])
-    dict_compte_auteurs = {}
-    for item in compte_auteurs:
-        dict_compte_auteurs[item['_id']] = item['nb']
-    df_compte_auteurs = pd.DataFrame({'Auteurs': dict_compte_auteurs.keys(), "Nombre d'Ouvrages": dict_compte_auteurs.values()})
-    # Barplot
-    fig, ax = plt.subplots(figsize=(4, 3))
-    ax.patch.set_facecolor('black')
-    #plt.figure(figsize=(3, 3))
-    sns.barplot(data=df_compte_auteurs, x="Nombre d'Ouvrages", y="Auteurs", hue='Auteurs', palette='viridis', ax=ax)
-    # Ajouter des étiquettes et un titre
-    plt.xlabel("Nombre d'Ouvrages", color='white')
-    plt.ylabel("Auteurs", color='white')
-    plt.title('Top 10 des Auteurs les plus prolifiques', color='white')
-    # Annoter chaque barre avec sa valeur en blanc
-    for i, v in enumerate(df_compte_auteurs["Nombre d'Ouvrages"]):
-        ax.text(v + 0.1, i, str(v), ha='left', va='center', fontsize=10, color='white')
+        fig.set_facecolor('black')
+        # Changer la couleur des étiquettes de l'axe des ordonnées (valeurs)
+        ax.tick_params(axis='y', colors='white')
+        # Changer la couleur du texte de l'axe des abscisses (noms des types)
+        ax.set_xticklabels(ax.get_xticklabels(), color='white')
+        # Afficher le plot avec Streamlit
+        st.pyplot(plt)
+    
+    # Afficher GRAPH nb livres auteur dans la deuxième colonne
+    with col2:
+        
+        centered_text(f"Nombre d'ouvrages par Auteur", "h2")
+        
+        set_auteurs = set([])
+        for item in Books.find({"authors" : {"$regex":"", "$options": "i"}}).sort('authors') :
+            for i in range (len(item['authors'])) :
+                item['authors'][i] = item['authors'][i].replace('?','')
+                set_auteurs.add(item['authors'][i])
+        liste_auteurs = list(set_auteurs)
+        liste_auteurs.sort()
+        liste_auteurs.append('Tous')
+        auteur = st.selectbox(
+        "Sélectionnez un Auteur : ", liste_auteurs, index=liste_auteurs.index('Tous')
+        )
 
-    fig.set_facecolor('black')
-    # Changer la couleur des étiquettes de l'axe des ordonnées (valeurs)
-    ax.tick_params(axis='y', colors='white')
-    # Changer la couleur du texte de l'axe des abscisses (noms des types)
-    ax.set_xticklabels(ax.get_xticklabels(), color='white')
-    # Afficher le plot avec Streamlit
-    st.pyplot(plt)
+        if auteur != 'Tous':
+            compte_auteur = Books.aggregate([
+                {'$unwind': "$authors"},
+                {"$match": {
+                    "authors": {"$eq" : auteur}
+                    }
+                },
+                {'$group': {
+                    '_id': "$authors",
+                    'nb': {'$sum': 1},
+                    }
+                }
+            ])
+            nb_livres = list(compte_auteur)[0]['nb']
+            centered_text(f"{auteur} a rédigé {nb_livres} ouvrages", "h3")

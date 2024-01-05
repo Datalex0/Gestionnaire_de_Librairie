@@ -20,7 +20,7 @@ J'ai répondu au sujet en utilisant une interface Streamlit.
 * L'onglet Recherche permet de faire une recherche dans la base de données via un titre, un auteur, un type d'ouvrage et de limiter les dates via un curseur.
 * L'onglet Ajout permet d'ajouter un nouveau livre avec son titre, son ou ses auteur(s), son année de publication et son type. Un identifiant est généré automatiquement.
 * L'onglet Suppression permet de supprimer un livre via son identifiant ou tous les livres d'un auteur en sélectionnant l'auteur désiré.
-* L'onglet Statistiques permet d'afficher le nombre d'ouvrages, la répartition par type d'ouvrages, la répartition par année, le nombre d'auteurs et le top 10 des auteurs les plus prolifiques de la base.
+* L'onglet Statistiques permet d'afficher le nombre d'ouvrages, la répartition par type d'ouvrages, la répartition par année, le nombre d'auteurs, le top 10 des auteurs les plus prolifiques de la base et le nombre de livres par auteur.
 
 ##
 ## Outils utilisés :

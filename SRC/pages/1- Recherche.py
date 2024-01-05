@@ -18,8 +18,7 @@ centered_text("Rechercher un Ouvrage")
 
 
 # import DB
-uri = "mongodb+srv://datalexis0:Data001@librairie.m2vowes.mongodb.net/MongoDB"
-client = MongoClient(uri)
+client = MongoClient()
 db = client.MongoDB
 Books = db.Books
 
@@ -34,6 +33,10 @@ step = 1)
 
 st.sidebar.markdown("***")
 
+
+
+        
+        
 # fonction de création et affichage du DF
 def dataframe(json):
     # Création du DataFrame
@@ -78,17 +81,17 @@ def dataframe(json):
     return afficher
 
 # Fonction de Traduction
-def traduction():
+def traduction(type):
     if type == "Livre":
         type = "Book"
     elif type == "Thèse":
         type = "Phd"
+    return type
 
 # Fonction de recherche
 def cherche(mode, colonne):
     json = []
     for item in Books.find({mode : {"$regex":colonne, "$options": "i"}}).sort('year'):
-        traduction()
         json.append(item)
     return json
 
@@ -156,7 +159,7 @@ elif recherche == "Par Type":
     if type == 'Tous':
         json = list(Books.find())
     else :
-        traduction()
+        type = traduction(type)
         json = cherche("type", type)
 
 

@@ -22,19 +22,3 @@ st.markdown(f"```{texte}```")
 st.title("sur l'application de gestion de votre Bibliothèque :books:")
 texte=":books:"
 centered_text("< == Veuillez choisir un onglet sur la gauche de votre écran", "h3")
-
-
-#"broadway"
-#"block"
-#"big"
-#"banner"
-#"bubble"
-#"lean"
-#"mini"
-#"script"
-#"shadow"
-#"slant"
-#"letters"
-#"Isometric3"
-#"Caligraphy" *****
-#"Swan" ***

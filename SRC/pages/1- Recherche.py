@@ -18,7 +18,8 @@ centered_text("Rechercher un Ouvrage")
 
 
 # import DB
-client = MongoClient("mongodb+srv://datalexis0:Data001@librairie.m2vowes.mongodb.net/")
+uri = "mongodb+srv://datalexis0:Data001@librairie.m2vowes.mongodb.net/MongoDB"
+client = MongoClient(uri)
 db = client.MongoDB
 Books = db.Books
 
